@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom"; // ✅ Add this
+import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./components/NavBar";
@@ -11,7 +11,7 @@ import { TripProvider } from "./context/TripContext";
 
 function App() {
   return (
-    <BrowserRouter> {/* ✅ Wrap the entire app */}
+    <BrowserRouter>
       <TripProvider>
         <div className="flex flex-col min-h-screen">
           <NavBar />
