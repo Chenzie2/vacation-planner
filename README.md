@@ -1,149 +1,106 @@
-# Vacation-planner - React application
+# Travel Explorer
 
-A simple React application for browsing travel destinations, saving favorites to a personal trip list, and adding new destinations to a shared database.
+**Live Site:** https://vacation-planner-eta.vercel.app/
+**Repository:** https://github.com/Chenzie2/vacation-planner
 
 ## Description
 
-This application allows users to:
-* View a list of travel destinations fetched from a local API (`json-server`).
-* Filter destinations by category (Beach, Mountain, City, etc.).
-* Search for destinations by name.
-* Sort destinations alphabetically.
-* View detailed information about a specific destination.
-* Add or remove destinations from a persistent "My Trip" list (using `localStorage`).
-* Add new destinations to the shared database via a form.
+Travel Explorer is a frontend React application that lets users browse a curated collection of travel destinations, explore detailed information and photo galleries for each location, and build a personal trip itinerary. The app is fully static and deployed on Vercel with no backend dependency.
 
 ## Features
 
-* **Destination Browsing:** Explore page displays destination cards with images, names, and descriptions.
-* **Filtering & Sorting:** Filter destinations by category and sort by name (A-Z, Z-A).
-* **Search:** Search bar to find destinations by name.
-* **Detailed View:** Dedicated page for each destination showing more details and images.
-* **My Trip:** A personal list where users can save destinations they are interested in. This list persists across browser sessions using `localStorage`.
-* **Add Destination:** A form to contribute new destinations to the `db.json` database.
-* **Responsive Design:** Built with Tailwind CSS for adaptability across different screen sizes.
-* **Local API:** Uses `json-server` to simulate a REST API using a local `db.json` file.
+**Destination Browsing:** The Explore page displays destination cards with image sliders, names, categories, and descriptions pulled from static data.
+
+**Filtering and Search:** Users can filter destinations by category (Beach, Mountain, City) and search by name or description in real time.
+
+**Sorting:** Destinations can be sorted alphabetically in ascending or descending order.
+
+**Detailed View:** Each destination has a dedicated page showing its full description, category, and a complete photo gallery.
+
+**My Trip:** Users can save destinations to a personal trip list. The list persists across browser sessions using localStorage. Destinations can be added from both the Explore page cards and the individual destination detail pages.
+
+**Custom Destinations:** Users can add their own destinations via a form on the My Trip page. Custom destinations display their full description directly on the trip card.
+
+**Contact Form:** A contact form is available in the footer for users to reach out.
+
+**Responsive Design:** Built with Tailwind CSS and a dark luxury theme using Cormorant Garamond and Outfit typefaces.
 
 ## Tech Stack
 
-* **Frontend:**
-    * [React](https://reactjs.org/) (v18+)
-    * [React Router DOM](https://reactrouter.com/) (v6+) for navigation
-    * [Tailwind CSS](https://tailwindcss.com/) for styling
-    * [Lucide React](https://lucide.dev/) for icons
-    * (Optional) [React Context API](https://reactjs.org/docs/context.html) (if `TripContext` is implemented)
-* **Backend (Mock API):**
-    * [json-server](https://github.com/typicode/json-server)
-* **Development Environment:**
-    * [Node.js](https://nodejs.org/) (LTS version recommended)
-    * [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+**Frontend:**
+React 19, React Router DOM v7, Tailwind CSS v3, Lucide React, Swiper, React Hot Toast
 
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your system:
-* Node.js (which includes npm) - Download from [nodejs.org](https://nodejs.org/)
+**Deployment:**
+Vercel (frontend), static data via JavaScript module
 
 ## Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <your-repository-url>
-    cd <repository-directory-name>
-    ```
+Clone the repository:
 
-2.  **Install frontend dependencies:**
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+```bash
+git clone https://github.com/Chenzie2/vacation-planner.git
+cd vacation-planner
+```
 
-3.  **Install json-server (if not already installed globally):**
-    ```bash
-    npm install -g json-server
-    # or install locally as a dev dependency
-    # npm install --save-dev json-server
-    ```
+Install dependencies:
 
-## Running the Application
+```bash
+npm install
+```
 
-You need to run two separate processes: the React development server and the `json-server`.
+Start the development server:
 
-1.  **Start the JSON Server:**
-    * Make sure you have a `db.json` file in the root of your project (or adjust the path accordingly).
-    * Open a terminal window and run:
-        ```bash
-        npx json-server --watch db.json --port 3000
-        ```
-        * This will start a mock API server accessible at `http://localhost:3000`.
-        * The `--watch` flag automatically updates the server if `db.json` changes.
+```bash
+npm run dev
+```
 
-2.  **Start the React Development Server:**
-    * Open a *second* terminal window (leave the `json-server` running).
-    * Run:
-        ```bash
-        npm start
-        # or
-        yarn start
-        ```
-        * This will typically start the React application and open it in your default browser, usually at `http://localhost:5173` (for Vite) or `http://localhost:3001` (for Create React App, adjust if different).
+The app will be available at http://localhost:5173
 
-Now you should be able to access the application in your browser and interact with the destinations fetched from `json-server`.
+## Project Structure
 
-## Project Structure (Example)
+```
+vacation-planner/
+  public/
+    assets/
+      destinations/       # All destination images (flat structure)
+  src/
+    components/
+      DestinationCard.jsx
+      NavBar.jsx
+      Footer.jsx
+    context/
+      TripContext.jsx      # Global trip state with localStorage persistence
+    data/
+      destinationData.js   # Static destination data
+    pages/
+      Home.jsx
+      Explore.jsx
+      DestinationDetails.jsx
+      MyTrip.jsx
+    App.jsx
+    index.css              # CSS variables, global styles, reusable component classes
+    main.jsx
+  package.json
+  vite.config.js
+```
 
+## Destinations
 
+The app includes six curated destinations across three categories:
 
-/
-|-- public/
-| |-- assets/ # Static assets like images
-| | |-- destinations/
-| |-- index.html # Main HTML file
-|-- src/
-| |-- components/ # Reusable UI components (e.g., DestinationCard.js)
-| |-- context/ # React Context files (e.g., TripContext.js)
-| |-- pages/ # Page components (e.g., HomePage.js, Explore.js, DestinationPage.js, MyTrip.js)
-| |-- App.js # Main application component with routing
-| |-- index.css # Global styles / Tailwind directives
-| |-- index.js # Entry point for React app
-|-- .gitignore
-|-- db.json # Local database file for json-server
-|-- package.json
-|-- README.md # This file
-|-- tailwind.config.js # Tailwind configuration
-|-- vite.config.js # Vite configuration (if using Vite)
-## API (`db.json`)
+Beach: Bali, Maldives
 
-The `db.json` file serves as the local database. `json-server` automatically creates RESTful routes based on the top-level keys in this file.
+City: Japan, Budapest
 
-**Example `db.json` structure:**
+Mountain: Austria, Switzerland
 
-```json
-{
-  "destinations": [
-    {
-      "id": 1,
-      "name": "Bali",
-      "category": "Beach",
-      "description": "Bali is an Indonesian island...",
-      "images": [
-        "/assets/destinations/Bali/Bali1.jpg",
-        "/assets/destinations/Bali/Bali2.jpg"
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Maldives",
-      "category": "Beach",
-    }
-  ]
-}
+Each destination includes a name, category, description, and a gallery of five images.
 
+## Deployment
 
-API Endpoints created by json-server:
-GET /destinations - Retrieve all destinations
-GET /destinations/:id - Retrieve a specific destination by ID
-POST /destinations - Add a new destination (requires JSON body)
-PUT /destinations/:id - Update a destination completely
-PATCH /destinations/:id - Partially update a destination
-DELETE /destinations/:id - Delete a destination
+The app is deployed on Vercel. 
+To build locally:
+
+```bash
+npm run build
+```
