@@ -104,3 +104,6 @@ To build locally:
 ```bash
 npm run build
 ```
+
+## Author
+GRACE ZAWADI.
