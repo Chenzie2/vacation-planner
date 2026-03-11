@@ -1,128 +1,106 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import destinationData from '../data/destinationData';
 
 export default function HomePage() {
-  const [allDestinations, setAllDestinations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const fetchAllDestinations = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch("http://localhost:3000/destinations");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setAllDestinations(data);
-      } catch (err) {
-        console.error("Fetch error:", err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAllDestinations();
+    const t = setTimeout(() => setVisible(true), 100);
+    return () => clearTimeout(t);
   }, []);
 
-  const featuredDestinations = allDestinations;
+  const v = visible ? 'visible' : '';
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center relative z-10">
-          <h1 className="text-5xl sm:text-6xl font-extrabold mb-4 drop-shadow-lg animate-fade-in">
-            Welcome to Travel Explorer
-          </h1>
-          <p className="text-xl sm:text-2xl text-gray-100 mb-8 drop-shadow-md animate-fade-in delay-200">
-            Discover your next adventure.
+    <div style={{ background: 'var(--bg-base)', minHeight: '100vh' }}>
+
+      {/* Hero */}
+      <div className="relative flex items-center justify-center overflow-hidden" style={{ height: '100vh' }}>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1428 40%, #0d1a2e 100%)' }} />
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(ellipse at 20% 50%, rgba(210,185,140,0.06) 0%, transparent 60%),
+                            radial-gradient(ellipse at 80% 20%, rgba(100,130,200,0.08) 0%, transparent 50%)`,
+        }} />
+
+        <div className="relative z-10 text-center px-6" style={{ maxWidth: '800px' }}>
+          <p className={`hero-text d1 label-caps ${v}`} style={{ marginBottom: '28px' }}>
+            Curated Travel Experiences
           </p>
-          <button
-            onClick={() => navigate("/explore")}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-3 rounded-lg shadow-xl transform hover:scale-105 transition duration-300 animate-fade-in delay-400"
-          >
-            Explore Destinations
-          </button>
+          <h1 className={`hero-text d2 ${v}`} style={{ fontSize: 'clamp(3.5rem, 8vw, 7rem)', fontWeight: 300, lineHeight: 1.05, marginBottom: '6px' }}>
+            Dream.
+          </h1>
+          <h1 className={`hero-text d2 ${v}`} style={{ fontSize: 'clamp(3.5rem, 8vw, 7rem)', fontWeight: 300, lineHeight: 1.05, fontStyle: 'italic', color: 'var(--gold)', marginBottom: '32px' }}>
+            Explore. Arrive.
+          </h1>
+          <p className={`hero-text d3 body-text ${v}`} style={{ fontSize: '1.05rem', marginBottom: '48px', maxWidth: '520px', margin: '0 auto 48px' }}>
+            Discover destinations that move you. Handpicked journeys for the discerning traveler.
+          </p>
+          <div className={`hero-text d4 ${v}`}>
+            <button className="btn-ghost" onClick={() => navigate('/explore')}>
+              <span>Explore Destinations</span>
+            </button>
+          </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-indigo-900 via-transparent to-indigo-900 opacity-30 pointer-events-none"></div>
+
+        <div className="absolute flex flex-col items-center gap-2" style={{ bottom: '40px', left: '50%', transform: 'translateX(-50%)', opacity: 0.35 }}>
+          <span className="label-caps" style={{ fontSize: '0.6rem' }}>Scroll</span>
+          <div style={{ width: '1px', height: '40px', background: 'linear-gradient(180deg, var(--gold), transparent)' }} />
+        </div>
       </div>
 
       {/* Featured Destinations */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-3">
-              Featured Destinations
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Explore some of our most popular and breathtaking locations around the globe.
-            </p>
-          </div>
+      <section className="page-wrap">
+        <div className="text-center mb-16">
+          <p className="label-caps" style={{ marginBottom: '16px' }}>Handpicked for You</p>
+          <h2 className="page-title" style={{ marginBottom: '20px' }}>
+            Featured <em>Destinations</em>
+          </h2>
+          <div className="gold-divider" />
+        </div>
 
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-blue-500"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+          {destinationData.map((destination) => (
+            <div key={destination.id} className="dest-card" onClick={() => navigate(`/destination/${destination.id}`)}>
+              <div className="card-img" style={{ height: '260px' }}>
+                <img src={destination.images[0]} alt={destination.name} />
+                <div className="card-img-overlay" />
+                <span className="card-badge">{destination.category}</span>
+              </div>
+              <div className="card-body">
+                <h3 className="card-title">{destination.name}</h3>
+                <p className="card-desc">{destination.description}</p>
+                <span className="card-link">View Details</span>
+              </div>
             </div>
-          ) : error ? (
-            <div className="text-center text-red-600 bg-red-100 p-6 rounded-xl shadow-md">
-              Error loading destinations: {error} <br />
-              Please ensure the JSON server is running.
-            </div>
-          ) : featuredDestinations.length === 0 ? (
-            <p className="text-center text-gray-500">No featured destinations available at the moment.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-              {featuredDestinations.map(destination => (
-                <div
-                  key={destination.id}
-                  className="relative bg-white rounded-2xl shadow-2xl overflow-hidden cursor-pointer transform transition duration-500 hover:scale-105 hover:shadow-2xl"
-                  onClick={() => navigate(`/destination/${destination.id}`)}
-                >
-                  <div className="relative h-64">
-                    <img
-                      src={destination.images[0]}
-                      alt={destination.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30"></div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">{destination.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{destination.description}</p>
-                    <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
-                      {destination.category}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          ))}
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-50 to-blue-50 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-6">Why Choose Travel Explorer?</h2>
-        <p className="text-gray-700 max-w-3xl mx-auto mb-8">
-          Curated destinations, real-time availability, and a seamless booking experience for your dream vacations.
-        </p>
-        <div className="flex flex-wrap justify-center gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-64 transform hover:-translate-y-2 transition duration-300">
-            <h3 className="font-semibold text-lg mb-2">Curated Destinations</h3>
-            <p className="text-gray-600 text-sm">Handpicked locations to ensure your experience is unforgettable.</p>
+      {/* Why Choose Us */}
+      <section className="py-24 px-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div className="text-center mb-16">
+            <p className="label-caps" style={{ marginBottom: '16px' }}>Why Travel Explorer</p>
+            <h2 className="section-title">Travel with <em>confidence</em></h2>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-lg w-64 transform hover:-translate-y-2 transition duration-300">
-            <h3 className="font-semibold text-lg mb-2">Seamless Booking</h3>
-            <p className="text-gray-600 text-sm">Easy booking system with real-time availability checks.</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-lg w-64 transform hover:-translate-y-2 transition duration-300">
-            <h3 className="font-semibold text-lg mb-2">Trusted Experience</h3>
-            <p className="text-gray-600 text-sm">Reliable travel guidance and recommendations for peace of mind.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: '2px' }}>
+            {[
+              { num: '01', title: 'Curated Destinations', desc: 'Handpicked locations chosen for their beauty, culture, and unique character.' },
+              { num: '02', title: 'Seamless Planning', desc: 'Build and manage your perfect itinerary with an intuitive, effortless experience.' },
+              { num: '03', title: 'Trusted Guidance', desc: 'Reliable recommendations from travelers who know these destinations deeply.' },
+            ].map((item) => (
+              <div key={item.num} className="feature-card" style={{ padding: '48px 36px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-subtle)', transition: 'background 0.3s ease, border-color 0.3s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(210,185,140,0.05)'; e.currentTarget.style.borderColor = 'var(--border-gold)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'var(--border-subtle)'; }}
+              >
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 300, color: 'var(--gold-dim)', marginBottom: '20px' }}>{item.num}</div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 400, marginBottom: '12px' }}>{item.title}</h3>
+                <p className="body-text">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

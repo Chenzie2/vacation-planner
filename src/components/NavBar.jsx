@@ -1,52 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-
-  const navLinkClasses = ({ isActive }) =>
-    `block px-4 py-2 rounded-lg font-medium transition-colors ${
-      isActive
-        ? "bg-white text-indigo-600"
-        : "text-white hover:bg-indigo-500 hover:text-white"
-    }`;
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="bg-gradient-to-r from-indigo-600 to-indigo-800 shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <NavLink
-          to="/"
-          className="text-white text-2xl md:text-3xl font-extrabold tracking-wide"
-        >
-          Dream Vacation Planner
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+      background: scrolled ? 'rgba(10,10,15,0.95)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(12px)' : 'none',
+      borderBottom: scrolled ? '1px solid var(--border-subtle)' : '1px solid transparent',
+      transition: 'all 0.4s ease',
+    }}>
+      <div className="flex items-center justify-between px-8" style={{ maxWidth: '1280px', margin: '0 auto', height: '72px' }}>
+        <NavLink to="/" style={{ textDecoration: 'none' }}>
+          <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 300, color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
+            Travel <em style={{ color: 'var(--gold)' }}>Explorer</em>
+          </span>
         </NavLink>
 
-        <div className="hidden md:flex space-x-4">
-          <NavLink to="/" className={navLinkClasses}>Home</NavLink>
-          <NavLink to="/explore" className={navLinkClasses}>Explore</NavLink>
-          <NavLink to="/my-trip" className={navLinkClasses}>My Trip</NavLink>
+        <div className="hidden md:flex items-center gap-10">
+          <NavLink to="/" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Home</NavLink>
+          <NavLink to="/explore" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Explore</NavLink>
+          <NavLink to="/my-trip" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>My Trip</NavLink>
         </div>
 
         <button
-          onClick={toggleMenu}
-          className="md:hidden text-white p-2 rounded-md hover:bg-indigo-500 transition"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', padding: '8px' }}
           aria-label="Toggle Menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            {isMobileMenuOpen
+              ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            }
           </svg>
         </button>
       </div>
 
-      <div className={`${isMobileMenuOpen ? "block" : "hidden"} md:hidden bg-indigo-700`}>
-        <div className="px-4 py-4 space-y-2">
-          <NavLink to="/" className={navLinkClasses} onClick={toggleMenu}>Home</NavLink>
-          <NavLink to="/explore" className={navLinkClasses} onClick={toggleMenu}>Explore</NavLink>
-          <NavLink to="/my-trip" className={navLinkClasses} onClick={toggleMenu}>My Trip</NavLink>
+      {isMobileMenuOpen && (
+        <div className="md:hidden px-8 pb-6 flex flex-col" style={{ background: 'rgba(10,10,15,0.98)', borderTop: '1px solid var(--border-subtle)' }}>
+          <NavLink to="/" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '14px 0', borderBottom: '1px solid var(--border-subtle)' }}>Home</NavLink>
+          <NavLink to="/explore" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '14px 0', borderBottom: '1px solid var(--border-subtle)' }}>Explore</NavLink>
+          <NavLink to="/my-trip" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '14px 0' }}>My Trip</NavLink>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

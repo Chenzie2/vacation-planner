@@ -6,67 +6,84 @@ const Footer = () => {
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ message: "", type: "" });
 
-  const handleContactSubmit = async (e) => {
+  const handleContactSubmit = (e) => {
     e.preventDefault();
     if (!contactName || !contactEmail || !contactMessage) return;
 
-    setIsSubmitting(true);
-    setSubmitStatus({ message: "", type: "" });
-
-    try {
-      const response = await fetch("http://localhost:3000/contacts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMessage, submittedAt: new Date().toISOString() }),
-      });
-
-      if (!response.ok) throw new Error("Failed to submit");
-
-      setSubmitStatus({ message: "Message sent successfully!", type: "success" });
-      setContactName(""); setContactEmail(""); setContactMessage("");
-    } catch (error) {
-      setSubmitStatus({ message: "Failed to send. Try again later.", type: "error" });
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSubmitStatus({ message: "Message received! We'll be in touch soon.", type: "success" });
+    setContactName("");
+    setContactEmail("");
+    setContactMessage("");
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-8">
+    <footer style={{ background: 'var(--bg-base)', color: 'var(--text-primary)', marginTop: 'auto', borderTop: '1px solid var(--border-subtle)' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '80px 24px 40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '48px' }}>
+
         <div>
-          <Link to="/" className="text-white text-2xl font-bold hover:text-indigo-400 transition">Dream Vacation Planner</Link>
-          <p className="mt-2 text-gray-400">Plan your perfect getaway to destinations worldwide.</p>
+          <Link to="/" style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 300, color: 'var(--text-primary)', letterSpacing: '0.05em', textDecoration: 'none' }}>
+            Travel <em style={{ color: 'var(--gold)' }}>Explorer</em>
+          </Link>
+          <p className="body-text" style={{ marginTop: '14px' }}>
+            Plan your perfect getaway to destinations worldwide.
+          </p>
         </div>
 
         <div>
-          <h4 className="text-gray-400 font-semibold mb-4 uppercase tracking-wider">Quick Links</h4>
-          <ul className="space-y-2">
-            <li><Link to="/" className="hover:text-white transition">Home</Link></li>
-            <li><Link to="/explore" className="hover:text-white transition">Explore</Link></li>
-            <li><Link to="/my-trip" className="hover:text-white transition">My Trip</Link></li>
+          <h4 className="label-caps" style={{ marginBottom: '20px' }}>Quick Links</h4>
+          <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none' }}>
+            <li><Link to="/" className="nav-link">Home</Link></li>
+            <li><Link to="/explore" className="nav-link">Explore</Link></li>
+            <li><Link to="/my-trip" className="nav-link">My Trip</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="text-gray-400 font-semibold mb-4 uppercase tracking-wider">Contact Us</h4>
-          <form onSubmit={handleContactSubmit} className="space-y-3">
-            <input type="text" placeholder="Name" value={contactName} onChange={e => setContactName(e.target.value)} className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500" required />
-            <input type="email" placeholder="Email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500" required />
-            <textarea placeholder="Message" value={contactMessage} onChange={e => setContactMessage(e.target.value)} rows="3" className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500" required />
-            {submitStatus.message && <div className={`text-sm p-2 rounded ${submitStatus.type === "success" ? "bg-green-800 text-green-200" : "bg-red-800 text-red-200"}`}>{submitStatus.message}</div>}
-            <button type="submit" disabled={isSubmitting} className={`w-full py-2 px-4 rounded-md text-white font-semibold transition ${isSubmitting ? "bg-gray-600 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-500"}`}>
-              {isSubmitting ? "Sending..." : "Send"}
+          <h4 className="label-caps" style={{ marginBottom: '20px' }}>Contact Us</h4>
+          <form onSubmit={handleContactSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <input
+              type="text"
+              placeholder="Name"
+              value={contactName}
+              onChange={(e) => setContactName(e.target.value)}
+              className="form-input"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
+              className="form-input"
+              required
+            />
+            <textarea
+              placeholder="Message"
+              value={contactMessage}
+              onChange={(e) => setContactMessage(e.target.value)}
+              rows="3"
+              className="form-input"
+              style={{ resize: 'vertical' }}
+              required
+            />
+            {submitStatus.message && (
+              <div className={submitStatus.type === "success" ? "banner-success" : "banner-error"}>
+                {submitStatus.message}
+              </div>
+            )}
+            <button type="submit" className="btn-ghost">
+              <span>Send Message</span>
             </button>
           </form>
         </div>
       </div>
 
-      <div className="bg-gray-800 py-4 text-center text-sm text-gray-500">
-        © {currentYear} Dream Vacation Planner. All rights reserved.
+      <div style={{ borderTop: '1px solid var(--border-subtle)', textAlign: 'center', padding: '24px' }}>
+        <span className="label-caps" style={{ fontSize: '0.62rem', color: 'var(--text-faint)' }}>
+          © {currentYear} Travel Explorer. All rights reserved.
+        </span>
       </div>
     </footer>
   );

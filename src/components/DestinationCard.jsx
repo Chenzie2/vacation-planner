@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -9,60 +8,48 @@ const DestinationCard = ({ destination }) => {
   const navigate = useNavigate();
 
   const handleDetailsClick = () => {
-    if (destination?.id) {
-      navigate(`/destination/${destination.id}`);
-    } else {
-      console.error("Destination ID is missing, cannot navigate.");
-    }
+    if (destination?.id) navigate(`/destination/${destination.id}`);
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col border border-gray-100 h-full">
-      <div className="h-48 relative">
+    <div className="dest-card h-full flex flex-col">
+      <div style={{ height: '220px', position: 'relative' }}>
         <Swiper
           spaceBetween={0}
           slidesPerView={1}
           navigation={true}
           modules={[Navigation]}
-          className="w-full h-full"
+          style={{ width: '100%', height: '100%' }}
         >
           {destination.images?.map((img, index) => (
             <SwiperSlide key={index}>
               <img
                 src={img}
                 alt={`${destination.name} ${index + 1}`}
-                className="w-full h-48 object-cover rounded-t-2xl"
+                style={{ width: '100%', height: '220px', objectFit: 'cover', display: 'block' }}
                 loading="lazy"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
-                }}
+                onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x300?text=No+Image"; }}
               />
             </SwiperSlide>
           ))}
         </Swiper>
+        <span className="card-badge">{destination.category}</span>
       </div>
 
-      <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">{destination.name}</h3>
-        <p className="text-gray-600 text-sm md:text-base mb-4 line-clamp-3 flex-grow">
-          {destination.description}
-        </p>
+      <div className="card-body flex flex-col flex-grow">
+        <h3 className="card-title">{destination.name}</h3>
+        <p className="card-desc flex-grow">{destination.description}</p>
 
-        <div className="mt-auto flex justify-between items-center pt-3">
+        <div className="flex items-center justify-between mt-auto pt-3" style={{ borderTop: '1px solid var(--border-subtle)' }}>
           {destination.price !== undefined ? (
-            <span className="text-indigo-600 font-bold text-sm md:text-base">
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: 'var(--gold)', fontWeight: 400 }}>
               Ksh {destination.price.toLocaleString()}
             </span>
           ) : (
-            <span className="text-gray-400 text-sm">Price N/A</span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'var(--text-faint)' }}>Price N/A</span>
           )}
-
-          <button
-            onClick={handleDetailsClick}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm md:text-base font-medium transition-colors"
-          >
-            Details
+          <button className="btn-ghost" onClick={handleDetailsClick} style={{ padding: '8px 20px', fontSize: '0.65rem' }}>
+            <span>Details</span>
           </button>
         </div>
       </div>
